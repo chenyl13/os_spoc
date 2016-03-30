@@ -8,4 +8,5 @@ user_main：执行代码
 ```
 KERNEL_EXECVE(sh);
 ```
+kernel_execve：执行SYS_exec系统调用，加载sh到内存  
 开始执行进程sh
