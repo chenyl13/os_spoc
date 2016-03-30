@@ -248,7 +248,7 @@ class scheduler:
             elif instruction_to_execute == DO_IO:
                 #YOUR CODE
                 self.move_to_wait(STATE_RUNNING)
-                self.io_finish_times[self.curr_proc].append(clock_tick + io_length)
+                self.io_finish_times[self.curr_proc].append(clock_tick + self.io_length + 1)
                 self.next_proc()
 
             # ENDCASE: check if currently running thing is out of instructions
