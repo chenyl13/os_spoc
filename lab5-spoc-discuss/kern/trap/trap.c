@@ -272,11 +272,6 @@ trap_dispatch(struct trapframe *tf) {
  * */
 void
 trap(struct trapframe *tf) {
-//    int cs = tf->tf_cs;
-//	int priv = cs & 3;
-//	if(tf->tf_trapno != 0x80 || tf->tf_regs.reg_eax != SYS_putc){
-//		cprintf("\tin trap, current priv=%d\n", priv);
-//	}
     // dispatch based on what type of trap occurred
     // used for previous projects
     if (current == NULL) {
@@ -288,9 +283,13 @@ trap(struct trapframe *tf) {
         current->tf = tf;
     
         bool in_kernel = trap_in_kernel(tf);
-    
+//                int cs = tf->tf_cs;
+//        	int priv = cs & 3;
+//        	if(tf->tf_trapno != 0x80 || tf->tf_regs.reg_eax != SYS_putc){
+//        		cprintf("in trap\tcurrent priv=%d\n", priv);
+//        	}
         trap_dispatch(tf);
-    
+
         current->tf = otf;
         if (!in_kernel) {
             if (current->flags & PF_EXITING) {

@@ -788,7 +788,7 @@ kernel_execve(const char *name, unsigned char *binary, size_t size) {
     int ret, len = strlen(name);
 
     struct proc_struct * proc = current;
-    cprintf("in kernel_execve\texec proc %d\n", proc->pid);
+    cprintf("in kernel_exec\texec proc %d\n", proc->pid);
 
 
     asm volatile (
@@ -800,8 +800,6 @@ kernel_execve(const char *name, unsigned char *binary, size_t size) {
 }
 
 #define __KERNEL_EXECVE(name, binary, size) ({                          \
-            cprintf("kernel_execve: pid = %d, name = \"%s\".\n",        \
-                    current->pid, name);                                \
             kernel_execve(name, binary, (size_t)(size));                \
         })
 

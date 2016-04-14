@@ -25,7 +25,7 @@ wakeup_proc(struct proc_struct *proc) {
         if (proc->state != PROC_RUNNABLE) {
             proc->state = PROC_RUNNABLE;
             proc->wait_state = 0;
-            cprintf("in wakeup\twake up proc %d\n", proc->pid);
+            cprintf("in wakeup_proc\twake up proc %d\n", proc->pid);
         }
         else {
             warn("wakeup runnable process.\n");
