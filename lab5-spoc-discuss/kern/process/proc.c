@@ -211,6 +211,7 @@ proc_run(struct proc_struct *proc) {
             current = proc;
             load_esp0(next->kstack + KSTACKSIZE);
             lcr3(next->cr3);
+            cprintf("in proc_run\tswitch from proc %d to proc %d\n", prev->pid, next->pid);
             switch_to(&(prev->context), &(next->context));
         }
         local_intr_restore(intr_flag);
@@ -427,7 +428,7 @@ do_fork(uint32_t clone_flags, uintptr_t stack, struct trapframe *tf) {
 
     }
     local_intr_restore(intr_flag);
-
+    cprintf("in do_fork\tfor proc %d: alloc proc_struct, setup kstack, copy mm, copy thread\n", proc->pid);
     wakeup_proc(proc);
 
     ret = proc->pid;
@@ -463,9 +464,11 @@ do_exit(int error_code) {
             mm_destroy(mm);
         }
         current->mm = NULL;
+        cprintf("in do_exit\tchange cr3, mm destroy, ");
     }
     current->state = PROC_ZOMBIE;
     current->exit_code = error_code;
+    cprintf("change proc %d state to PROC_ZOMBIE\n", current->pid);
     
     bool intr_flag;
     struct proc_struct *proc;
@@ -656,7 +659,7 @@ do_execve(const char *name, size_t len, unsigned char *binary, size_t size) {
 			: "=a" (cs));
 	int priv = cs & 3;
 
-	cprintf("in do_execve, current priv=%d\n", priv);
+	cprintf("in do_execve\tcurrent priv=%d\n", priv);
 
     struct mm_struct *mm = current->mm;
     if (!user_mem_check(mm, (uintptr_t)name, len, 0)) {
@@ -734,6 +737,7 @@ repeat:
     }
     if (haskid) {
         current->state = PROC_SLEEPING;
+        cprintf("in do_wait\tchange proc %d state to PROC_SLEEPING\n", current->pid);
         current->wait_state = WT_CHILD;
         schedule();
         if (current->flags & PF_EXITING) {
@@ -784,7 +788,7 @@ kernel_execve(const char *name, unsigned char *binary, size_t size) {
     int ret, len = strlen(name);
 
     struct proc_struct * proc = current;
-    cprintf("kernel_execve: pid = %d\n", proc->pid);
+    cprintf("in kernel_execve\texec proc %d\n", proc->pid);
 
 
     asm volatile (
@@ -814,11 +818,6 @@ kernel_execve(const char *name, unsigned char *binary, size_t size) {
         })
 
 #define KERNEL_EXECVE2(x, xstart, xsize)        __KERNEL_EXECVE2(x, xstart, xsize)
-
-void my_user_proc(int error_code){
-	cprintf("123");
-	//exit(0);/
-}
 
 // user_main - kernel thread used to exec a user program
 static int

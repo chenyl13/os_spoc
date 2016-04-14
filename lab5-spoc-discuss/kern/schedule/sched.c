@@ -25,6 +25,7 @@ wakeup_proc(struct proc_struct *proc) {
         if (proc->state != PROC_RUNNABLE) {
             proc->state = PROC_RUNNABLE;
             proc->wait_state = 0;
+            cprintf("in wakeup\twake up proc %d\n", proc->pid);
         }
         else {
             warn("wakeup runnable process.\n");
@@ -60,15 +61,6 @@ schedule(void) {
         }
     }
     local_intr_restore(intr_flag);
-
-    cprintf("    schedule:\n");
-    for(int i = 0; i < 10; i++){
-    	struct proc_struct * proc = find_proc(i);
-    	if(proc == NULL){
-    		continue;
-    	}
-    	//cprintf("\tpid %d state=%d\n",i, proc->state);
-    	print_state(i, proc->state);
-    }
+	cprintf("in schedule\tswitch proc %d to proc %d\n", le2proc(last, list_link)->pid, next->pid);
 }
 

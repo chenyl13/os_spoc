@@ -272,8 +272,11 @@ trap_dispatch(struct trapframe *tf) {
  * */
 void
 trap(struct trapframe *tf) {
-
-
+//    int cs = tf->tf_cs;
+//	int priv = cs & 3;
+//	if(tf->tf_trapno != 0x80 || tf->tf_regs.reg_eax != SYS_putc){
+//		cprintf("\tin trap, current priv=%d\n", priv);
+//	}
     // dispatch based on what type of trap occurred
     // used for previous projects
     if (current == NULL) {
@@ -298,16 +301,5 @@ trap(struct trapframe *tf) {
             }
         }
     }
-
-    int cs = tf->tf_cs;
-//	asm	("movw %%cs, %0;"
-//			: "=a" (cs));
-	int priv = cs & 3;
-
-	if(tf->tf_regs.reg_eax == 0x80 && tf->tf_regs.reg_ebx == SYS_putc){
-		return;
-	}
-	cprintf("%0x, %0x", tf->tf_trapno, tf->tf_regs.reg_eax);
-	cprintf("\tin trap, current priv=%d\n", priv);
 }
 
