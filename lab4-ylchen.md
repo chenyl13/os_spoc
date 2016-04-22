@@ -4,7 +4,7 @@
 对proc_struct结构的每个成员初始化，初始cr3置为boot_cr3，其余清零或置空。
 
 ###proc_struct中struct context context和struct trapframe *tf成员变量含义和在本实验中的作用
-‘’‘
+```
 struct context {
     uint32_t eip;
     uint32_t esp;
@@ -15,14 +15,14 @@ struct context {
     uint32_t edi;
     uint32_t ebp;
 };
-’‘’
+```
 
 context结构保存了通用寄存器信息，其用处为：  
 1、进程被创建时，在copy_thread函数中设置context中的eip和esp，用于创建完成后跳转执行。  
 2、用于在切换进程时保存当前运行状态，并在下次运行前恢复。  
 用处1在本实验中用到。
 
-‘’‘
+```
 struct trapframe {
     struct pushregs tf_regs;
     uint16_t tf_gs;
@@ -45,7 +45,7 @@ struct trapframe {
     uint16_t tf_ss;
     uint16_t tf_padding5;
 } __attribute__((packed));
-’‘’
+```
 
 trapframe结构用于在中断、异常或系统调用时，保存进程上下文，记录异常类型，用于执行异常处理以及之后恢复现场。  
 本实验中，load_icode函数设置好trapframe，相当于创建了进程的上下文，通过do_exit函数从中断返回，就可以切换到用户态。
@@ -68,7 +68,7 @@ ucore中定义最大pid大于最大线程数，并通过查询整个当前进程
 ##练习3：阅读代码，理解 proc_run 函数和它调用的函数如何完成进程切换的。（无编码工作）
 
 ###proc_run函数分析
-‘’‘
+```
 void
 proc_run(struct proc_struct *proc) {
     if (proc != current) {
@@ -84,7 +84,7 @@ proc_run(struct proc_struct *proc) {
         local_intr_restore(intr_flag);
     }
 }
-’‘’
+```
 proc_run函数的作用是完成两个进程的上下文切换，包括切换当前进程控制块、内核堆栈、页表和通用寄存器信息。
 
 ###在本实验的执行过程中，创建且运行了几个内核线程？
