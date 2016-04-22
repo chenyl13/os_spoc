@@ -16,6 +16,7 @@ struct context {
     uint32_t ebp;
 };
 ’‘’
+
 context结构保存了通用寄存器信息，其用处为：  
 1、进程被创建时，在copy_thread函数中设置context中的eip和esp，用于创建完成后跳转执行。  
 2、用于在切换进程时保存当前运行状态，并在下次运行前恢复。  
@@ -45,6 +46,7 @@ struct trapframe {
     uint16_t tf_padding5;
 } __attribute__((packed));
 ’‘’
+
 trapframe结构用于在中断、异常或系统调用时，保存进程上下文，记录异常类型，用于执行异常处理以及之后恢复现场。  
 本实验中，load_icode函数设置好trapframe，相当于创建了进程的上下文，通过do_exit函数从中断返回，就可以切换到用户态。
 
