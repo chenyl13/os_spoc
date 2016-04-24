@@ -1,4 +1,4 @@
-#lab5
+﻿#lab5
 ##练习1: 加载应用程序并执行（需要编码）
 
 ###设计实现过程
@@ -42,18 +42,18 @@ exit函数使当前进程进入zombie态，回收页表等资源，若其父进�
 ###请给出ucore中一个用户态进程的执行状态生命周期图（包执行状态，执行状态之间的变换关系，以及产生变换的事件或函数调用）。（字符方式画即可）
 
 ```
-PROC_UNINIT   <--  alloc_proc
-       |
-       |   <--  proc_init/wakeup_proc
-       |
-       |             -->  PROC_ZOMBIE
-      V            |  <--  do_exit
-PROC_RUNNABLE  <-------------------------------
-       |            ↑                      wakeup_proc   -->  |
-       |        proc_run                                             |
-       |   <--  try_free_pages/do_wait/do_sleep     |
-      V                                                                   |
-PROC_SLEEPING------------------------------------
+PROC_UNINIT <-- alloc_proc
+    |
+    |<--  proc_init/wakeup_proc
+    |
+    | PROC_ZOMBIE
+    V  ↑<--  do_exit
+PROC_RUNNABLE  <---------------------------
+    |   ↑                 wakeup_proc -->|
+    |  proc_run                           |
+    |<-- try_free_pages/do_wait/do_sleep  |
+    V                                     |
+PROC_SLEEPING------------------------------
 ```
 
 ##与参考答案的区别
